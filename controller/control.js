@@ -3,11 +3,8 @@ module.exports = {
   // GET ALL
   GetAll: async (req, res) => {
     const books = await LibSch.find();
-    if (books) {
-      res.status(200).send(books);
-    } else {
-      res.status(404).res("no books available");
-    }
+    if (books) res.status(200).send(books);
+    else res.status(404).res("no books available");
   },
 
   //GET BY NAME
@@ -15,11 +12,8 @@ module.exports = {
     try {
       const name = req.params.name;
       const getbook = await LibSch.findOne({ name: name });
-      if (getbook) {
-        res.status(200).send(getbook);
-      } else {
-        res.status(404).send("Book not found");
-      }
+      if (getbook) res.status(200).send(getbook);
+      else res.status(404).send("Book not found");
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
@@ -30,11 +24,8 @@ module.exports = {
     try {
       const id = req.params.id;
       const getbook = await LibSch.findOne({ id: id });
-      if (getbook) {
-        res.status(200).send(getbook);
-      } else {
-        res.status(404).send("Book not found");
-      }
+      if (getbook) res.status(200).send(getbook);
+      else res.status(404).send("Book not found");
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
@@ -50,11 +41,20 @@ module.exports = {
         if (a.author !== author && b.author === author) return 1;
         return 0;
       });
-      if (allBooks) {
-        res.status(200).send(allBooks);
-      } else {
-        res.status(404).send("Author not found");
-      }
+      if (allBooks) res.status(200).send(allBooks);
+      else res.status(404).send("Author not found");
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  },
+
+  //SORT BY DATE
+  SortByDate: async (req, res) => {
+    try {
+      const order = Number(req.params.order);
+      if (order !== 1 && order !== -1) return res.status(400).send({ error: "Invalid order, must be 1 (asc) or -1 (desc)" });
+      const book = await LibSch.find().sort({ time: order });
+      res.status(200).send(book);
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
@@ -78,11 +78,8 @@ module.exports = {
     try {
       const id = parseInt(req.params.id);
       const Delbook = await LibSch.deleteOne({ id: id });
-      if (Delbook.deletedCount != 0) {
-        res.status(200).send(Delbook);
-      } else {
-        res.status(404).send("Book not found");
-      }
+      if (Delbook.deletedCount != 0) res.status(200).send(Delbook);
+      else res.status(404).send("Book not found");
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
@@ -92,11 +89,8 @@ module.exports = {
     try {
       const name = req.params.name;
       const Delbook = await LibSch.deleteOne({ name: name });
-      if (Delbook.deletedCount != 0) {
-        res.status(200).send(Delbook);
-      } else {
-        res.status(404).send("Book not found");
-      }
+      if (Delbook.deletedCount != 0) res.status(200).send(Delbook);
+      else res.status(404).send("Book not found");
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
@@ -112,8 +106,7 @@ module.exports = {
       });
 
       if (!book) return res.status(404).send("book not found");
-
-      res.status(200).send(book);
+      else res.status(200).send(book);
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
