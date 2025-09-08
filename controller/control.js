@@ -6,6 +6,41 @@ module.exports = {
     res.status(200).send(books);
   },
 
+  //GET BY NAME
+  GetByName: async (req, res) => {
+    try {
+      const name = req.params.name;
+      const getbook = await LibSch.findOne({ name: name });
+      if (getbook) {
+        res.status(200).send(getbook);
+      } else {
+        res.status(404).send("Book not found");
+      }
+    } catch (error) {
+      res.status(400).send({ error: error.message });
+    }
+  },
+
+  //SORT BY AUTHOR
+  SortByAuthor: async (req, res) => {
+    try {
+      const author = req.params.author;
+      const allBooks = await LibSch.find();
+      allBooks.sort((a, b) => {
+        if (a.author === author && b.author !== author) return -1;
+        if (a.author !== author && b.author === author) return 1;
+        return 0;
+      });
+      if (allBooks) {
+        res.status(200).send(allBooks);
+      } else {
+        res.status(404).send("Author not found");
+      }
+    } catch (error) {
+      res.status(400).send({ error: error.message });
+    }
+  },
+
   //ADD BOOk
   AddBook: async (req, res) => {
     try {
@@ -15,7 +50,7 @@ module.exports = {
       await book.save();
       res.status(201).send(book);
     } catch (error) {
-      res.status(400).send(error);
+      res.status(400).send({ error: error.message });
     }
   },
 
