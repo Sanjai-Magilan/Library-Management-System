@@ -21,6 +21,21 @@ module.exports = {
     }
   },
 
+  //GET BY ID 
+   GetById: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const getbook = await LibSch.findOne({ id: id });
+      if (getbook) {
+        res.status(200).send(getbook);
+      } else {
+        res.status(404).send("Book not found");
+      }
+    } catch (error) {
+      res.status(400).send({ error: error.message });
+    }
+  },
+
   //SORT BY AUTHOR
   SortByAuthor: async (req, res) => {
     try {
