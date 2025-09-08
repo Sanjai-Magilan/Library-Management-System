@@ -3,7 +3,11 @@ module.exports = {
   // GET ALL
   GetAll: async (req, res) => {
     const books = await LibSch.find();
-    res.status(200).send(books);
+    if (books) {
+      res.status(200).send(books);
+    } else {
+      res.status(404).res("no books available");
+    }
   },
 
   //GET BY NAME
@@ -17,12 +21,12 @@ module.exports = {
         res.status(404).send("Book not found");
       }
     } catch (error) {
-      res.status(400).send({ error: error.message });
+      res.status(500).send({ error: error.message });
     }
   },
 
-  //GET BY ID 
-   GetById: async (req, res) => {
+  //GET BY ID
+  GetById: async (req, res) => {
     try {
       const id = req.params.id;
       const getbook = await LibSch.findOne({ id: id });
@@ -32,7 +36,7 @@ module.exports = {
         res.status(404).send("Book not found");
       }
     } catch (error) {
-      res.status(400).send({ error: error.message });
+      res.status(500).send({ error: error.message });
     }
   },
 
@@ -52,7 +56,7 @@ module.exports = {
         res.status(404).send("Author not found");
       }
     } catch (error) {
-      res.status(400).send({ error: error.message });
+      res.status(500).send({ error: error.message });
     }
   },
 
@@ -65,7 +69,7 @@ module.exports = {
       await book.save();
       res.status(201).send(book);
     } catch (error) {
-      res.status(400).send({ error: error.message });
+      res.status(500).send({ error: error.message });
     }
   },
 
@@ -80,7 +84,7 @@ module.exports = {
         res.status(404).send("Book not found");
       }
     } catch (error) {
-      res.status(400).send({ error: error.message });
+      res.status(500).send({ error: error.message });
     }
   },
   // DELETE BY NAME
@@ -94,7 +98,24 @@ module.exports = {
         res.status(404).send("Book not found");
       }
     } catch (error) {
-      res.status(400).send({ error: error.message });
+      res.status(500).send({ error: error.message });
+    }
+  },
+
+  // UPDATE BY ID
+  update: async (req, res) => {
+    const id = req.params.id;
+    const updates = req.body;
+    try {
+      const book = await LibSch.findOneAndUpdate({ id: id }, updates, {
+        new: true,
+      });
+
+      if (!book) return res.status(404).send("book not found");
+
+      res.status(200).send(book);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
     }
   },
 };

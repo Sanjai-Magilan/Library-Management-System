@@ -9,4 +9,5 @@ router.get("/sort/author/:author", controll.SortByAuthor);
 router.post("/add", controll.AddBook);
 router.delete("/delete/:id", controll.DeleteBook);
 router.delete("/delete/name/:name", controll.DeleteByName);
+router.put("/update/:id", controll.update);
 module.exports = router;
