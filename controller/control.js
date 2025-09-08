@@ -34,7 +34,7 @@ module.exports = {
     }
   },
   // DELETE BY NAME
-  GetByName: async (req, res) => {
+  DeleteByName: async (req, res) => {
     try {
       const name = req.params.name;
       const Delbook = await LibSch.deleteOne({ name: name });
