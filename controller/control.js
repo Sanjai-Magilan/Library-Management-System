@@ -35,13 +35,16 @@ module.exports = {
   SortByAuthor: async (req, res) => {
     try {
       const author = req.params.author;
-      const allBooks = await LibSch.find();
-      allBooks.sort((a, b) => {
-        if (a.author === author && b.author !== author) return -1;
-        if (a.author !== author && b.author === author) return 1;
-        return 0;
-      });
-      if (allBooks) res.status(200).send(allBooks);
+      const allBooks = await LibSch.aggregate([
+        {
+          $addFields: {
+            priority: { $cond: [{ $eq: ["$author", author] }, 0, 1] },
+          },
+        },
+        { $sort: { priority: 1 } },
+      ]);
+
+      if (allBooks.length > 0) res.status(200).send(allBooks);
       else res.status(404).send("Author not found");
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -52,7 +55,10 @@ module.exports = {
   SortByDate: async (req, res) => {
     try {
       const order = Number(req.params.order);
-      if (order !== 1 && order !== -1) return res.status(400).send({ error: "Invalid order, must be 1 (asc) or -1 (desc)" });
+      if (order !== 1 && order !== -1)
+        return res
+          .status(400)
+          .send({ error: "Invalid order, must be 1 (asc) or -1 (desc)" });
       const book = await LibSch.find().sort({ time: order });
       res.status(200).send(book);
     } catch (error) {
