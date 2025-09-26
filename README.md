@@ -8,7 +8,6 @@
 A simple **RESTful backend** for managing books in a library.  
 Built with **Node.js, Express.js, and MongoDB**, this project supports **CRUD operations, search, and sorting** for books.
 
----
 
 ## 🚀 Features
 
@@ -19,7 +18,6 @@ Built with **Node.js, Express.js, and MongoDB**, this project supports **CRUD op
 - ✏️ Update book details  
 - 🗑️ Delete a book  
 
----
 
 ## 🛠 Tech Stack
 
@@ -27,6 +25,3 @@ Built with **Node.js, Express.js, and MongoDB**, this project supports **CRUD op
 - **Express.js** – Web framework  
 - **MongoDB + Mongoose** – Database & ODM  
 - **JavaScript** – Language  
-
----
-
