@@ -7,11 +7,27 @@ module.exports = {
     else res.status(404).res("no books available");
   },
 
+  GetSet: async (req, res) => {
+    try {
+      const start = req.params.start;
+      const end = req.params.end;
+      const skipCount = start - 1;
+      const limitCount = end - start + 1;
+
+      const books = await LibSch.find().skip(skipCount).limit(limitCount);
+      res.status(200).send(books);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  },
+
   //GET BY NAME
   GetByName: async (req, res) => {
     try {
       const name = req.params.name;
-      const getbook = await LibSch.findOne({ name: name });
+      const getbook = await LibSch.find({
+        name: { $regex: new RegExp(name, "i") },
+      });
       if (getbook) res.status(200).send(getbook);
       else res.status(404).send("Book not found");
     } catch (error) {
