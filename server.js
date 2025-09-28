@@ -3,7 +3,7 @@ const app = express();
 const ConnectDb = require("./database/db");
 ConnectDb();
 const router = require("./router/routes");
-PORT = 5000;
+PORT = 4050;
 app.use(express.json());
 app.use("/Lib", router);
 app.listen(PORT, () => console.log(`server started at port ${PORT}`));
